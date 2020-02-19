@@ -1,9 +1,15 @@
-﻿using System;
+﻿/*
+ * FancyScrollView (https://github.com/setchi/FancyScrollView)
+ * Copyright (c) 2020 setchi
+ * Licensed under MIT (https://github.com/setchi/FancyScrollView/blob/master/LICENSE)
+ */
+
+using System;
 using UnityEngine;
 
 namespace FancyScrollView.Example04
 {
-    public class Context
+    class Context
     {
         public int SelectedIndex = -1;
 
@@ -19,24 +25,15 @@ namespace FancyScrollView.Example04
         public void SetCellState(int cellIndex, int dataIndex, float x, float y, float scale)
         {
             var size = cellIndex + 1;
-            ResizeIfNeeded(ref CellState, size);
+            if (size > CellState.Length)
+            {
+                Array.Resize(ref CellState, size);
+            }
 
             CellState[cellIndex].x = x;
             CellState[cellIndex].y = y;
             CellState[cellIndex].z = dataIndex;
             CellState[cellIndex].w = scale;
-        }
-
-        void ResizeIfNeeded<T>(ref T[] array, int size)
-        {
-            if (size <= array.Length)
-            {
-                return;
-            }
-
-            var tmp = array;
-            array = new T[size];
-            Array.Copy(tmp, array, tmp.Length);
         }
     }
 }

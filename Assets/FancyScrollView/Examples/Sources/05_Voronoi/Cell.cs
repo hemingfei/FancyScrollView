@@ -1,10 +1,16 @@
-﻿using UnityEngine;
+﻿/*
+ * FancyScrollView (https://github.com/setchi/FancyScrollView)
+ * Copyright (c) 2020 setchi
+ * Licensed under MIT (https://github.com/setchi/FancyScrollView/blob/master/LICENSE)
+ */
+
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace FancyScrollView.Example05
 {
     [ExecuteInEditMode]
-    public class Cell : FancyScrollViewCell<ItemData, Context>
+    class Cell : FancyCell<ItemData, Context>
     {
         [SerializeField] Animator scrollAnimator = default;
         [SerializeField] Animator selectAnimator = default;
@@ -25,27 +31,10 @@ namespace FancyScrollView.Example05
         bool currentSelection;
         float updateSelectionTime;
 
-        void Start()
+        public override void Initialize()
         {
             hash = Random.value * 100f;
             button.onClick.AddListener(() => Context.OnCellClicked?.Invoke(Index));
-        }
-
-        void LateUpdate()
-        {
-            image.rectTransform.localPosition = position + GetFluctuation();
-        }
-
-        Vector3 GetFluctuation()
-        {
-            var fluctX = Mathf.Sin(Time.time + hash * 40) * 10;
-            var fluctY = Mathf.Sin(Time.time + hash) * 10;
-            return new Vector3(fluctX, fluctY, 0f);
-        }
-
-        public override void SetupContext(Context context)
-        {
-            base.SetupContext(context);
 
             Context.UpdateCellState += () =>
             {
@@ -60,6 +49,18 @@ namespace FancyScrollView.Example05
             };
         }
 
+        void LateUpdate()
+        {
+            image.rectTransform.localPosition = position + GetFluctuation();
+        }
+
+        Vector3 GetFluctuation()
+        {
+            var fluctX = Mathf.Sin(Time.time + hash * 40) * 10;
+            var fluctY = Mathf.Sin(Time.time + hash) * 10;
+            return new Vector3(fluctX, fluctY, 0f);
+        }
+
         public override void UpdateContent(ItemData cellData)
         {
             message.text = cellData.Message;
@@ -69,7 +70,12 @@ namespace FancyScrollView.Example05
         public override void UpdatePosition(float position)
         {
             currentPosition = position;
-            scrollAnimator.Play(AnimatorHash.Scroll, -1, position);
+
+            if (scrollAnimator.isActiveAndEnabled)
+            {
+                scrollAnimator.Play(AnimatorHash.Scroll, -1, position);
+            }
+
             scrollAnimator.speed = 0;
         }
 

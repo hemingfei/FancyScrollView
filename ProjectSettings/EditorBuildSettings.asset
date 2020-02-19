@@ -20,4 +20,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/FancyScrollView/Examples/05_Voronoi.unity
     guid: 9f4081131e0754ae184f905e3d995a98
+  - enabled: 1
+    path: Assets/FancyScrollView/Examples/06_LoopTabBar.unity
+    guid: 58528ac4d9c36415ea90597e1199f2e4
+  - enabled: 1
+    path: Assets/FancyScrollView/Examples/07_ScrollRect.unity
+    guid: 8d95738372cdc4d858b4c4c4f06d2db1
+  - enabled: 1
+    path: Assets/FancyScrollView/Examples/08_GridView.unity
+    guid: 8441a013bef6d450aa8dc5de6207a233
+  - enabled: 1
+    path: Assets/FancyScrollView/Examples/09_LoadTexture.unity
+    guid: eb8cb776d6776468eb0bec979e0c2010
   m_configObjects: {}

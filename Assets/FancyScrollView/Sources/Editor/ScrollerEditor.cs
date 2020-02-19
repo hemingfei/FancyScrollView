@@ -1,4 +1,10 @@
-﻿using UnityEditor;
+﻿/*
+ * FancyScrollView (https://github.com/setchi/FancyScrollView)
+ * Copyright (c) 2020 setchi
+ * Licensed under MIT (https://github.com/setchi/FancyScrollView/blob/master/LICENSE)
+ */
+
+using UnityEditor;
 using UnityEditor.AnimatedValues;
 
 // For manteinance, every new [SerializeField] variable in Scroller must be declared here
@@ -10,7 +16,7 @@ namespace FancyScrollView
     public class ScrollerEditor : Editor
     {
         SerializedProperty viewport;
-        SerializedProperty directionOfRecognize;
+        SerializedProperty scrollDirection;
         SerializedProperty movementType;
         SerializedProperty elasticity;
         SerializedProperty scrollSensitivity;
@@ -21,6 +27,8 @@ namespace FancyScrollView
         SerializedProperty snapVelocityThreshold;
         SerializedProperty snapDuration;
         SerializedProperty snapEasing;
+        SerializedProperty draggable;
+        SerializedProperty scrollbar;
 
         AnimBool showElasticity;
         AnimBool showInertiaRelatedValues;
@@ -29,7 +37,7 @@ namespace FancyScrollView
         void OnEnable()
         {
             viewport = serializedObject.FindProperty("viewport");
-            directionOfRecognize = serializedObject.FindProperty("directionOfRecognize");
+            scrollDirection = serializedObject.FindProperty("scrollDirection");
             movementType = serializedObject.FindProperty("movementType");
             elasticity = serializedObject.FindProperty("elasticity");
             scrollSensitivity = serializedObject.FindProperty("scrollSensitivity");
@@ -40,6 +48,8 @@ namespace FancyScrollView
             snapVelocityThreshold = serializedObject.FindProperty("snap.VelocityThreshold");
             snapDuration = serializedObject.FindProperty("snap.Duration");
             snapEasing = serializedObject.FindProperty("snap.Easing");
+            draggable = serializedObject.FindProperty("draggable");
+            scrollbar = serializedObject.FindProperty("scrollbar");
 
             showElasticity = new AnimBool(Repaint);
             showInertiaRelatedValues = new AnimBool(Repaint);
@@ -56,7 +66,7 @@ namespace FancyScrollView
 
         void SetAnimBools(bool instant)
         {
-            SetAnimBool(showElasticity, !movementType.hasMultipleDifferentValues && movementType.enumValueIndex == (int)Scroller.MovementType.Elastic, instant);
+            SetAnimBool(showElasticity, !movementType.hasMultipleDifferentValues && movementType.enumValueIndex == (int)MovementType.Elastic, instant);
             SetAnimBool(showInertiaRelatedValues, !inertia.hasMultipleDifferentValues && inertia.boolValue, instant);
             SetAnimBool(showSnapEnableRelatedValues, !snapEnable.hasMultipleDifferentValues && snapEnable.boolValue, instant);
         }
@@ -79,12 +89,14 @@ namespace FancyScrollView
 
             serializedObject.Update();
             EditorGUILayout.PropertyField(viewport);
-            EditorGUILayout.PropertyField(directionOfRecognize);
+            EditorGUILayout.PropertyField(scrollDirection);
             EditorGUILayout.PropertyField(movementType);
             DrawMovementTypeRelatedValue();
             EditorGUILayout.PropertyField(scrollSensitivity);
             EditorGUILayout.PropertyField(inertia);
             DrawInertiaRelatedValues();
+            EditorGUILayout.PropertyField(draggable);
+            EditorGUILayout.PropertyField(scrollbar);
             serializedObject.ApplyModifiedProperties();
         }
 
@@ -108,7 +120,7 @@ namespace FancyScrollView
         {
             using (var group = new EditorGUILayout.FadeGroupScope(showInertiaRelatedValues.faded))
             {
-                if (!group.visible) 
+                if (!group.visible)
                 {
                     return;
                 }
